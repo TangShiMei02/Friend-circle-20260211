@@ -59,7 +59,7 @@ function initialize_fc_lite() {
                 processArticles(data);
             })
             .finally(() => {
-                loadMoreBtn.innerText = '再来亿点'; // 恢复按钮文本
+                loadMoreBtn.innerText = '点击加载更多'; // 恢复按钮文本
             });
     }
 
