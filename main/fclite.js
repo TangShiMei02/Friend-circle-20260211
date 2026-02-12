@@ -26,7 +26,7 @@ function initialize_fc_lite() {
     
     const loadMoreBtn = document.createElement('button');
     loadMoreBtn.id = 'load-more-btn';
-    loadMoreBtn.innerText = '再来亿点';
+    loadMoreBtn.innerText = '点击加载更多';
     root.appendChild(loadMoreBtn);
 
     // 创建统计信息容器
