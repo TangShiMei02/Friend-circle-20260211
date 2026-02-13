@@ -68,7 +68,7 @@ function initialize_fc_lite() {
         // 处理统计数据
         const stats = data.statistical_data;
         statsContainer.innerHTML = `
-            <div>订阅:${stats.friends_num}   活跃:${stats.active_num}   总文章数:${stats.article_num}<br></div>
+            <div>订阅:${stats.friends_num}   活跃:${stats.active_num}   总文章数:${allArticles.length}<br></div>
             <div>更新时间:${stats.last_updated_time}</div>
         `;
 
