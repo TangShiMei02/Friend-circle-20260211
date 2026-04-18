@@ -65,6 +65,8 @@ specific_RSS:
    - name: 青萍叙事
      url: "https://blog.lusyoe.com/rss/feed.xml"
    - name: ZLA 小站
-     url: https://zla.pub/feed.xml
+     url: "https://zla.pub/feed.xml"
+   - name: 风舞心弦
+     url: "https://fengwu.art/feed"
   # - name: "無名小栈"
   #   url: "https://blog.imsyy.top/rss.xml"
