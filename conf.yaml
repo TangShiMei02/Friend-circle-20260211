@@ -68,5 +68,9 @@ specific_RSS:
      url: "https://zla.pub/feed.xml"
    - name: 风舞心弦
      url: "https://fengwu.art/feed"
+   - name: 风记星辰
+     url: "https://www.thyuu.com/feed"
+   - name: 我是军爸
+     url: "https://me.xu19.com/feed"
   # - name: "無名小栈"
   #   url: "https://blog.imsyy.top/rss.xml"
