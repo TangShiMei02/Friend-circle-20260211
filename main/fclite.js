@@ -1,26 +1,18 @@
 function initialize_fc_lite() {
 
     // 用户配置
+    // 设置默认配置
     UserConfig = {
         private_api_url: UserConfig?.private_api_url || "", 
-        page_turning_number: UserConfig?.page_turning_number || 24,
-        error_img: UserConfig?.error_img || "https://cdn.magicalapk.com/square/8352122639973264.ico"
+        page_turning_number: UserConfig?.page_turning_number || 24, // 默认24篇
+        error_img: UserConfig?.error_img || "https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite/static/favicon.ico" // 默认头像
     };
 
-    // 已知失效的图床域名列表
-    const deadDomains = ['i.p-i.vip'];
-
-    // 安全头像获取函数：过滤失效域名
-    function getSafeAvatar(avatar) {
-        if (!avatar) return UserConfig.error_img;
-        for (const domain of deadDomains) {
-            if (avatar.includes(domain)) return UserConfig.error_img;
-        }
-        return avatar;
-    }
-
     const root = document.getElementById('friend-circle-lite-root');
-    if (!root) return;
+    
+    if (!root) return; // 确保根元素存在
+
+    // 清除之前的内容
     root.innerHTML = '';
 
     const randomArticleContainer = document.createElement('div');
@@ -37,12 +29,13 @@ function initialize_fc_lite() {
     loadMoreBtn.innerText = '点击加载更多';
     root.appendChild(loadMoreBtn);
 
+    // 创建统计信息容器
     const statsContainer = document.createElement('div');
     statsContainer.id = 'stats-container';
     root.appendChild(statsContainer);
 
-    let start = 0;
-    let allArticles = [];
+    let start = 0; // 记录加载起始位置
+    let allArticles = []; // 存储所有文章
 
     function loadMoreArticles() {
         const cacheKey = 'friend-circle-lite-cache';
@@ -50,7 +43,7 @@ function initialize_fc_lite() {
         const cacheTime = localStorage.getItem(cacheTimeKey);
         const now = new Date().getTime();
 
-        if (cacheTime && (now - cacheTime < 10 * 60 * 1000)) {
+        if (cacheTime && (now - cacheTime < 10 * 60 * 1000)) { // 缓存时间小于10分钟
             const cachedData = JSON.parse(localStorage.getItem(cacheKey));
             if (cachedData) {
                 processArticles(cachedData);
@@ -66,19 +59,20 @@ function initialize_fc_lite() {
                 processArticles(data);
             })
             .finally(() => {
-                loadMoreBtn.innerText = '点击加载更多';
+                loadMoreBtn.innerText = '点击加载更多'; // 恢复按钮文本
             });
     }
 
     function processArticles(data) {
         allArticles = data.article_data;
+        // 处理统计数据
         const stats = data.statistical_data;
         statsContainer.innerHTML = `
             <div>订阅:${stats.friends_num}   活跃:${stats.active_num}   总文章数:${allArticles.length}<br></div>
             <div>更新时间:${stats.last_updated_time}</div>
         `;
 
-        displayRandomArticle();
+        displayRandomArticle(); // 显示随机友链卡片
 
         const articles = allArticles.slice(start, start + UserConfig.page_turning_number);
 
@@ -96,8 +90,8 @@ function initialize_fc_lite() {
             author.className = 'card-author';
             const authorImg = document.createElement('img');
             authorImg.className = 'no-lightbox';
-            authorImg.src = getSafeAvatar(article.avatar);
-            authorImg.onerror = function() { this.onerror = null; this.src = UserConfig.error_img; };
+            authorImg.src = article.avatar || UserConfig.error_img; // 使用默认头像
+            authorImg.onerror = () => authorImg.src = UserConfig.error_img; // 头像加载失败时使用默认头像
             author.appendChild(authorImg);
             author.appendChild(document.createTextNode(article.author));
             card.appendChild(author);
@@ -113,19 +107,21 @@ function initialize_fc_lite() {
 
             const bgImg = document.createElement('img');
             bgImg.className = 'card-bg no-lightbox';
-            bgImg.src = getSafeAvatar(article.avatar);
-            bgImg.onerror = function() { this.onerror = null; this.src = UserConfig.error_img; };
+            bgImg.src = article.avatar || UserConfig.error_img;
+            bgImg.onerror = () => bgImg.src = UserConfig.error_img; // 头像加载失败时使用默认头像
             card.appendChild(bgImg);
 
             container.appendChild(card);
         });
 
         start += UserConfig.page_turning_number;
+
         if (start >= allArticles.length) {
-            loadMoreBtn.style.display = 'none';
+            loadMoreBtn.style.display = 'none'; // 隐藏按钮
         }
     }
 
+    // 显示随机文章的逻辑
     function displayRandomArticle() {
         const randomArticle = allArticles[Math.floor(Math.random() * allArticles.length)];
         randomArticleContainer.innerHTML = `
@@ -140,14 +136,16 @@ function initialize_fc_lite() {
             </div>
         `;
 
+        // 为刷新按钮添加事件监听器
         const refreshBtn = document.getElementById('refresh-random-article');
         refreshBtn.addEventListener('click', function (event) {
-            event.preventDefault();
-            displayRandomArticle();
+            event.preventDefault(); // 阻止默认的跳转行为
+            displayRandomArticle(); // 调用显示随机文章的逻辑
         });
     }
 
     function showAuthorArticles(author, avatar, link) {
+        // 如果不存在，则创建模态框结构
         if (!document.getElementById('fclite-modal')) {
             const modal = document.createElement('div');
             modal.id = 'modal';
@@ -169,15 +167,16 @@ function initialize_fc_lite() {
         const modalAuthorNameLink = document.getElementById('modal-author-name-link');
         const modalBg = document.getElementById('modal-bg');
 
-        modalArticlesContainer.innerHTML = '';
-        modalAuthorAvatar.src = getSafeAvatar(avatar);
-        modalAuthorAvatar.onerror = function() { this.onerror = null; this.src = UserConfig.error_img; };
-        modalBg.src = getSafeAvatar(avatar);
-        modalBg.onerror = function() { this.onerror = null; this.src = UserConfig.error_img; };
+        modalArticlesContainer.innerHTML = ''; // 清空之前的内容
+        modalAuthorAvatar.src = avatar  || UserConfig.error_img; // 使用默认头像
+        modalAuthorAvatar.onerror = () => modalAuthorAvatar.src = UserConfig.error_img; // 头像加载失败时使用默认头像
+        modalBg.src = avatar || UserConfig.error_img; // 使用默认头像
+        modalBg.onerror = () => modalBg.src = UserConfig.error_img; // 头像加载失败时使用默认头像
         modalAuthorNameLink.innerText = author;
         modalAuthorNameLink.href = new URL(link).origin;
 
         const authorArticles = allArticles.filter(article => article.author === author);
+        // 仅仅取前五个，防止文章过多导致模态框过长，如果不够五个则全部取出
         authorArticles.slice(0, 4).forEach(article => {
             const articleDiv = document.createElement('div');
             articleDiv.className = 'modal-article';
@@ -197,12 +196,14 @@ function initialize_fc_lite() {
             modalArticlesContainer.appendChild(articleDiv);
         });
 
+        // 设置类名以触发显示动画
         modal.style.display = 'block';
         setTimeout(() => {
             modal.classList.add('modal-open');
-        }, 10);
+        }, 10); // 确保显示动画触发
     }
 
+    // 隐藏模态框的函数
     function hideModal() {
         const modal = document.getElementById('modal');
         modal.classList.remove('modal-open');
@@ -212,9 +213,13 @@ function initialize_fc_lite() {
         }, { once: true });
     }
 
+    // 初始加载
     loadMoreArticles();
+
+    // 加载更多按钮点击事件
     loadMoreBtn.addEventListener('click', loadMoreArticles);
 
+    // 点击遮罩层关闭模态框
     window.onclick = function(event) {
         const modal = document.getElementById('modal');
         if (event.target === modal) {
