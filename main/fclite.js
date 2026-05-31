@@ -5,7 +5,7 @@ function initialize_fc_lite() {
     UserConfig = {
         private_api_url: UserConfig?.private_api_url || "", 
         page_turning_number: UserConfig?.page_turning_number || 24, // 默认24篇
-        error_img: UserConfig?.error_img || "https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite/static/favicon.ico" // 默认头像
+        error_img: UserConfig?.error_img || "https://cdn.magicalapk.com/square/8352122639973264.ico" // 默认头像
     };
 
     const root = document.getElementById('friend-circle-lite-root');
@@ -91,7 +91,7 @@ function initialize_fc_lite() {
             const authorImg = document.createElement('img');
             authorImg.className = 'no-lightbox';
             authorImg.src = article.avatar || UserConfig.error_img; // 使用默认头像
-            authorImg.onerror = () => authorImg.src = UserConfig.error_img; // 头像加载失败时使用默认头像
+            authorImg.onerror = function() { this.onerror = null; this.src = UserConfig.error_img; }; // 头像加载失败时使用默认头像
             author.appendChild(authorImg);
             author.appendChild(document.createTextNode(article.author));
             card.appendChild(author);
@@ -108,7 +108,7 @@ function initialize_fc_lite() {
             const bgImg = document.createElement('img');
             bgImg.className = 'card-bg no-lightbox';
             bgImg.src = article.avatar || UserConfig.error_img;
-            bgImg.onerror = () => bgImg.src = UserConfig.error_img; // 头像加载失败时使用默认头像
+            bgImg.onerror = function() { this.onerror = null; this.src = UserConfig.error_img; }; // 头像加载失败时使用默认头像
             card.appendChild(bgImg);
 
             container.appendChild(card);
@@ -169,9 +169,9 @@ function initialize_fc_lite() {
 
         modalArticlesContainer.innerHTML = ''; // 清空之前的内容
         modalAuthorAvatar.src = avatar  || UserConfig.error_img; // 使用默认头像
-        modalAuthorAvatar.onerror = () => modalAuthorAvatar.src = UserConfig.error_img; // 头像加载失败时使用默认头像
+        modalAuthorAvatar.onerror = function() { this.onerror = null; this.src = UserConfig.error_img; }; // 头像加载失败时使用默认头像
         modalBg.src = avatar || UserConfig.error_img; // 使用默认头像
-        modalBg.onerror = () => modalBg.src = UserConfig.error_img; // 头像加载失败时使用默认头像
+        modalBg.onerror = function() { this.onerror = null; this.src = UserConfig.error_img; }; // 头像加载失败时使用默认头像
         modalAuthorNameLink.innerText = author;
         modalAuthorNameLink.href = new URL(link).origin;
 
