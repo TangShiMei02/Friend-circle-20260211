@@ -72,5 +72,7 @@ specific_RSS:
      url: "https://www.thyuu.com/feed"
    - name: 我是军爸
      url: "https://me.xu19.com/feed"
+   - name: 王志满律师
+     url: "https://2019527.xyz/feed.xml"
   # - name: "無名小栈"
   #   url: "https://blog.imsyy.top/rss.xml"
